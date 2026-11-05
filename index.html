@@ -572,7 +572,7 @@ dialog.dlg::backdrop { background: var(--scrim); }
     <div class="tv-id">
       <span id="tvTile" class="tv-tile" data-icon="tv" aria-hidden="true"></span>
       <div class="tv-text">
-        <h1 id="tvName" class="tv-name">Lounge</h1>
+        <h1 id="tvName" class="tv-name"></h1>
         <div id="tvSub" class="tv-sub" role="status" hidden></div>
       </div>
     </div>
@@ -783,8 +783,11 @@ dialog.dlg::backdrop { background: var(--scrim); }
 
 <script type="module">
 // ---------------------------------------------------------------- constants
-const APP_VERSION = 8; // MUST equal the sw.js cache number (loungeremote-v8)
+const APP_VERSION = 9; // MUST equal the sw.js cache number (loungeremote-v9)
 const PATCH_NOTES = [
+  { v: 9, date: '2026-11-05', title: 'Cleaner header', items: [
+    'Removed the “Lounge” title and the “TV on / TV box on” line from the top of the screen',
+  ] },
   { v: 8, date: '2026-11-05', title: 'A new look', items: [
     'Everything is on one screen now: what’s playing, the remote and your apps. No more switching between tabs',
     'New swipe touchpad: swipe to move, tap to select, and keep your finger down after a swipe to keep moving. Prefer buttons? Tap the corner icon to switch to the D-pad',
@@ -2027,8 +2030,8 @@ function renderView() {
   $('appsBack').hidden = !apps;
   $('tvTile').hidden = apps;
   $('topPower').hidden = !paired || apps;
-  $('tvName').textContent = apps ? 'All apps' : ((S.status && S.status.name) || 'Lounge');
-  $('tvSub').hidden = apps || !$('tvSub').textContent;
+  $('tvName').textContent = apps ? 'All apps' : ((S.status && S.status.name) || '');
+  $('tvSub').hidden = true;
 }
 function openAppsView() {
   if (view === 'apps') return;
@@ -2088,9 +2091,9 @@ function renderRemote() {
   const tv = $('tvSub');
   tv.textContent = on === 'online' ? t : '';
   tv.title = sub ? `${t} · ${sub}` : t;
-  tv.hidden = view === 'apps' || !tv.textContent;
+  tv.hidden = true; // header no longer shows the TV status line
   $('topPower').title = sub ? `Power · ${sub}` : 'Power';
-  if (view !== 'apps') $('tvName').textContent = (S.status && S.status.name) || 'Lounge';
+  if (view !== 'apps') $('tvName').textContent = (S.status && S.status.name) || '';
   $('inputChip').hidden = !(S.status && S.status.power === 'bravia');
   $('keysNote').hidden = !(S.status && S.status.keys === false);
 }
