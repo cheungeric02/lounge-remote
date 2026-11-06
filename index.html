@@ -110,14 +110,12 @@ svg { display: block; }
 .tv-id { flex: 1; min-width: 0; display: flex; align-items: center; gap: 10px; }
 .tv-tile {
   width: 36px; height: 36px; border-radius: 12px; flex: none;
-  background: var(--pc); color: var(--on-pc); display: grid; place-items: center;
+  object-fit: cover; display: block;
 }
-.tv-tile svg { width: 20px; height: 20px; }
 .tv-text { min-width: 0; }
 .tv-name { font-size: 18px; font-weight: 500; margin: 0; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .tv-sub { font-size: 12px; color: var(--on-var); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 #appsBack { margin-left: -12px; }
-@media (max-width: 380px) { .tv-tile { display: none; } }
 .icon-btn {
   width: 48px; height: 48px; border-radius: 24px;
   display: grid; place-items: center; color: var(--on-var); flex: none;
@@ -570,7 +568,7 @@ dialog.dlg::backdrop { background: var(--scrim); }
   <div class="topbar-in">
     <button id="appsBack" class="icon-btn press" type="button" aria-label="Back to remote" hidden></button>
     <div class="tv-id">
-      <span id="tvTile" class="tv-tile" data-icon="tv" aria-hidden="true"></span>
+      <img id="tvTile" class="tv-tile" src="icons/icon-192.png" alt="" width="36" height="36" aria-hidden="true">
       <div class="tv-text">
         <h1 id="tvName" class="tv-name"></h1>
         <div id="tvSub" class="tv-sub" role="status" hidden></div>
@@ -783,8 +781,11 @@ dialog.dlg::backdrop { background: var(--scrim); }
 
 <script type="module">
 // ---------------------------------------------------------------- constants
-const APP_VERSION = 11; // MUST equal the sw.js cache number (loungeremote-v11). Shown to the user as v2.1 (see label in PATCH_NOTES)
+const APP_VERSION = 12; // MUST equal the sw.js cache number (loungeremote-v12). Shown to the user as v2.2 (see label in PATCH_NOTES)
 const PATCH_NOTES = [
+  { v: 12, label: '2.2', date: '2026-11-06', title: 'Icon in the header', items: [
+    'The new remote icon now also shows in the top corner of the app, replacing the old TV tile',
+  ] },
   { v: 11, label: '2.1', date: '2026-11-06', title: 'New app icon', items: [
     'A new remote-control app icon replaces the old L. Remove and re-add the app to your home screen to see it',
   ] },
