@@ -281,7 +281,7 @@ body.has-nav main { padding-bottom: calc(104px + env(safe-area-inset-bottom)); }
 .remote-page { display: flex; flex-direction: column; align-items: center; padding: 8px 0 28px; }
 .rbody {
   --rb-ink: #4b2fb8; --rb-edge: rgba(255,255,255,.28); --rb-face: #f6f1ff; --rb-face2: #e4d9ff;
-  width: min(300px, 100%); zoom: .82; padding: 22px 20px 26px; border-radius: 150px 150px 44px 44px;
+  width: min(300px, 100%); padding: 22px 20px 26px; border-radius: 150px 150px 44px 44px;
   background: linear-gradient(160deg, #7858f8, #5f40cd 55%, #412398); color: var(--rb-face);
   box-shadow: 0 10px 34px rgba(40,20,110,.55), inset 0 0 0 1px rgba(255,255,255,.18);
   display: flex; flex-direction: column; align-items: center; gap: 22px;
@@ -817,8 +817,11 @@ dialog.dlg::backdrop { background: var(--scrim); }
 
 <script type="module">
 // ---------------------------------------------------------------- constants
-const APP_VERSION = 16; // MUST equal the sw.js cache number (loungeremote-v13). Shown to the user as v2.3 (see label in PATCH_NOTES)
+const APP_VERSION = 17; // MUST equal the sw.js cache number (loungeremote-v17). Shown to the user as v2.3 (see label in PATCH_NOTES)
 const PATCH_NOTES = [
+  { v: 17, label: '2.3', date: '2026-11-08', title: 'Remote spacing', items: [
+    'The Remote screen is back to its full-size spacing; scroll to reach Power and Input'
+  ] },
   { v: 16, label: '2.3', date: '2026-11-08', title: 'Remote tab', items: [
     'Remote now lives in a bottom bar next to Home, with the Lounge logo as its icon',
     'The remote is coloured to match the Lounge logo'
