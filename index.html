@@ -703,8 +703,8 @@ dialog.dlg::backdrop { background: var(--scrim); }
           <button type="button" id="rType" class="rbtn rdark press" aria-label="Type with keyboard"><span data-icon="keyboard"></span></button>
           <button type="button" id="rHome" class="rbtn press" aria-label="Home"><span data-icon="home"></span></button>
           <button type="button" id="rMute" class="rbtn press" data-vol="mute" aria-label="Mute" aria-pressed="false"></button>
-          <button type="button" id="rVolUp" class="rbtn rtxt press" data-vol="up" aria-label="Volume up">VOL +</button>
           <button type="button" id="rVolDown" class="rbtn rtxt press" data-vol="down" aria-label="Volume down">VOL &minus;</button>
+          <button type="button" id="rVolUp" class="rbtn rtxt press" data-vol="up" aria-label="Volume up">VOL +</button>
         </div>
         <div class="rpill">
           <button type="button" id="rPower" class="rsmall press" aria-label="Power"><span data-icon="power"></span></button>
@@ -820,8 +820,11 @@ dialog.dlg::backdrop { background: var(--scrim); }
 
 <script type="module">
 // ---------------------------------------------------------------- constants
-const APP_VERSION = 18; // MUST equal the sw.js cache number (loungeremote-v18). Shown to the user as v2.3 (see label in PATCH_NOTES)
+const APP_VERSION = 19; // MUST equal the sw.js cache number (loungeremote-v19). Shown to the user as v2.3 (see label in PATCH_NOTES)
 const PATCH_NOTES = [
+  { v: 19, label: '2.3', date: '2026-11-08', title: 'Remote button order', items: [
+    'Remote: Mute (speaker with a cross) is middle right, Vol − is bottom left and Vol + is bottom right'
+  ] },
   { v: 18, label: '2.3', date: '2026-11-08', title: 'Smoother tabs', items: [
     'Switching between Home and Remote no longer makes the bottom bar jump'
   ] },
@@ -1853,7 +1856,8 @@ function renderVolume() {
   mb.classList.toggle('on', muted);
   mb.setAttribute('aria-pressed', String(muted));
   const rm = $('rMute');
-  rm.innerHTML = icon(muted ? 'muted' : 'volume') + `<span>${muted ? 'Unmute' : 'Mute'}</span>`;
+  rm.innerHTML = icon('muted') + `<span>${muted ? 'Unmute' : 'Mute'}</span>`;
+  rm.setAttribute('aria-label', muted ? 'Unmute' : 'Mute');
   rm.classList.toggle('on', muted);
   rm.setAttribute('aria-pressed', String(muted));
   $('volBtnIcon').innerHTML = icon(muted ? 'muted' : 'volume');
