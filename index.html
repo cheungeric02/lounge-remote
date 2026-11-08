@@ -142,6 +142,20 @@ svg { display: block; }
 .chip.offline .dot { background: var(--warn); }
 
 main { padding: 4px 16px calc(28px + env(safe-area-inset-bottom)); max-width: 480px; margin: 0 auto; }
+body.has-nav main { padding-bottom: calc(104px + env(safe-area-inset-bottom)); }
+.bnav {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 30; display: flex; justify-content: center; gap: 8px;
+  padding: 8px 16px calc(10px + env(safe-area-inset-bottom)); background: var(--surface-2);
+  box-shadow: 0 -1px 0 var(--outline-var);
+}
+.bnav[hidden] { display: none; }
+.bnav-btn { flex: 1; max-width: 200px; display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--on-var); font-size: 12px; font-weight: 500; padding: 0; }
+.bnav-ind { width: 64px; height: 32px; border-radius: 16px; display: grid; place-items: center; transition: background-color .2s, border-radius .3s var(--spring); }
+.bnav-ind svg { width: 24px; height: 24px; }
+.bnav-ind img { width: 26px; height: 26px; border-radius: 8px; display: block; }
+.bnav-btn[aria-current="page"] { color: var(--on); }
+.bnav-btn[aria-current="page"] .bnav-ind { background: var(--pc); color: var(--on-pc); }
+.bnav-btn:active .bnav-ind { border-radius: 10px; }
 
 /* Pairing */
 .pair-wrap { min-height: calc(100dvh - 140px); display: grid; place-items: center; }
@@ -266,50 +280,49 @@ main { padding: 4px 16px calc(28px + env(safe-area-inset-bottom)); max-width: 48
 .dpad-cross { position: absolute; left: 50%; top: 50%; width: 220px; height: 220px; margin: -110px 0 0 -110px; }
 .remote-page { display: flex; flex-direction: column; align-items: center; padding: 8px 0 28px; }
 .rbody {
-  --rb-ink: #5b5f63; --rb-edge: #d6d9dc;
-  width: min(300px, 100%); padding: 22px 20px 26px; border-radius: 150px 150px 44px 44px;
-  background: linear-gradient(180deg, #fbfbfc, #f1f2f3); color: var(--rb-ink);
-  box-shadow: 0 10px 34px rgba(0,0,0,.35), inset 0 0 0 1px #e4e6e8;
+  --rb-ink: #4b2fb8; --rb-edge: rgba(255,255,255,.28); --rb-face: #f6f1ff; --rb-face2: #e4d9ff;
+  width: min(300px, 100%); zoom: .82; padding: 22px 20px 26px; border-radius: 150px 150px 44px 44px;
+  background: linear-gradient(160deg, #7858f8, #5f40cd 55%, #412398); color: var(--rb-face);
+  box-shadow: 0 10px 34px rgba(40,20,110,.55), inset 0 0 0 1px rgba(255,255,255,.18);
   display: flex; flex-direction: column; align-items: center; gap: 22px;
 }
 .rbody .dpad {
   width: 256px; height: 256px; margin: 0; border-radius: 50%;
-  background: radial-gradient(circle at 50% 35%, #ffffff, #f2f3f4 80%);
-  box-shadow: inset 0 0 0 1px var(--rb-edge), 0 3px 8px rgba(0,0,0,.12);
+  background: radial-gradient(circle at 50% 30%, #8e72ff, #5a3bc6 85%);
+  box-shadow: inset 0 0 0 1px var(--rb-edge), inset 0 -8px 18px rgba(30,10,90,.35), 0 3px 8px rgba(30,10,90,.35);
 }
 .rbody .dpad-cross { left: 0; top: 0; width: 100%; height: 100%; margin: 0; }
-.rbody .wedge[data-key] { width: 84px; height: 76px; border-radius: 38px; color: #8c9195; background: transparent; }
+.rbody .wedge[data-key] { width: 84px; height: 76px; border-radius: 38px; color: #e4d9ff; background: transparent; }
 .rbody .wedge[data-key="up"] { left: 86px; top: 8px; }
 .rbody .wedge[data-key="down"] { left: 86px; top: auto; bottom: 8px; }
 .rbody .wedge[data-key="left"] { left: 6px; top: 90px; }
 .rbody .wedge[data-key="right"] { left: auto; right: 6px; top: 90px; }
-.rbody .wedge.pressed { background: #e1e4e7; color: #3c4043; transform: scale(.94); }
+.rbody .wedge.pressed { background: rgba(255,255,255,.22); color: #fff; transform: scale(.94); }
 .rbody .dpad-ok {
   left: 76px; top: 76px; width: 104px; height: 104px; border-radius: 50%;
-  background: linear-gradient(180deg, #ffffff, #f3f4f5); box-shadow: inset 0 0 0 1px var(--rb-edge), 0 2px 5px rgba(0,0,0,.14);
-  color: var(--rb-ink);
+  background: linear-gradient(180deg, #fbf8ff, #e4d9ff); box-shadow: 0 3px 8px rgba(30,10,90,.4);
 }
-.rbody .dpad-ok.pressed { background: #e1e4e7; transform: scale(.95); filter: none; }
+.rbody .dpad-ok.pressed { background: #cdbcff; transform: scale(.95); filter: none; }
 .rgrid { display: grid; grid-template-columns: repeat(2, 92px); gap: 22px 52px; justify-content: center; }
 .rbtn {
   width: 92px; height: 92px; border-radius: 50%; padding: 0; display: grid; place-items: center;
-  background: linear-gradient(180deg, #ffffff, #f1f2f3); color: var(--rb-ink);
-  box-shadow: inset 0 0 0 1px var(--rb-edge), 0 3px 6px rgba(0,0,0,.16);
+  background: linear-gradient(180deg, var(--rb-face), var(--rb-face2)); color: var(--rb-ink);
+  box-shadow: 0 3px 8px rgba(30,10,90,.4);
   font: 800 16px/1 'Roboto Condensed', 'Arial Narrow', Arial, sans-serif; letter-spacing: .3px;
 }
 .rbtn svg { width: 30px; height: 30px; }
-.rbtn:active { transform: scale(.94); box-shadow: inset 0 0 0 1px var(--rb-edge), 0 1px 2px rgba(0,0,0,.2); border-radius: 50%; }
-.rbtn.rdark { background: radial-gradient(circle at 35% 30%, #2a2a2a, #000); color: #fff; box-shadow: 0 3px 8px rgba(0,0,0,.4); }
-.rbtn.on { background: #d9e2ff; color: #1a3c8c; }
+.rbtn:active { transform: scale(.94); box-shadow: 0 1px 3px rgba(30,10,90,.5); border-radius: 50%; }
+.rbtn.rdark { background: radial-gradient(circle at 35% 30%, #2f1b82, #1a0d52); color: #f6f1ff; box-shadow: 0 3px 8px rgba(10,0,50,.55); }
+.rbtn.on { background: #ffd9ec; color: #8a1250; }
 #rMute span { display: none; }
 .rpill {
   width: 100%; height: 80px; border-radius: 40px; display: flex; align-items: center; justify-content: space-around;
-  background: linear-gradient(180deg, #e9eaec, #f6f7f8); box-shadow: inset 0 2px 5px rgba(0,0,0,.14), inset 0 0 0 1px #e1e3e5;
+  background: rgba(25,8,80,.35); box-shadow: inset 0 2px 6px rgba(10,0,50,.45), inset 0 0 0 1px rgba(255,255,255,.1);
 }
-.rdash { width: 14px; height: 5px; border-radius: 3px; background: #3c4043; }
+.rdash { width: 14px; height: 5px; border-radius: 3px; background: #e4d9ff; }
 .rsmall {
   width: 58px; height: 58px; border-radius: 50%; display: grid; place-items: center; color: var(--rb-ink);
-  background: linear-gradient(180deg, #ffffff, #f1f2f3); box-shadow: inset 0 0 0 1px var(--rb-edge), 0 2px 4px rgba(0,0,0,.2);
+  background: linear-gradient(180deg, var(--rb-face), var(--rb-face2)); box-shadow: 0 2px 5px rgba(10,0,50,.5);
 }
 .rsmall svg { width: 26px; height: 26px; }
 .rsmall:active { transform: scale(.93); border-radius: 50%; }
@@ -656,7 +669,6 @@ dialog.dlg::backdrop { background: var(--scrim); }
         <button id="volBtn" type="button" class="act press" aria-haspopup="dialog"><span id="volBtnIcon"></span>Volume</button>
       </div>
       <div class="chip-row">
-        <button type="button" id="remoteChip" class="act-chip press"><span data-icon="remote"></span>Remote</button>
         <button type="button" id="typeChip" class="act-chip press"><span data-icon="keyboard"></span>Type</button>
         <button type="button" id="ppChip" class="act-chip press" hidden><span data-icon="playpause"></span>Play/pause</button>
         <button type="button" id="sleepChip" class="act-chip press" aria-haspopup="dialog"><span data-icon="moon"></span><span id="sleepChipText">Sleep</span></button>
@@ -730,6 +742,11 @@ dialog.dlg::backdrop { background: var(--scrim); }
   </section>
 </main>
 
+<nav id="bottomNav" class="bnav" aria-label="Main" hidden>
+  <button type="button" id="navHome" class="bnav-btn" aria-current="page"><span class="bnav-ind"><span data-icon="home"></span></span><span class="bnav-lbl">Home</span></button>
+  <button type="button" id="navRemote" class="bnav-btn"><span class="bnav-ind"><img src="icons/icon-192.png" alt="" width="26" height="26"></span><span class="bnav-lbl">Remote</span></button>
+</nav>
+
 <div id="sheetScrim" class="sheet-scrim"></div>
 <div id="sheet" class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
   <div class="sheet-grab" aria-hidden="true"></div>
@@ -800,8 +817,12 @@ dialog.dlg::backdrop { background: var(--scrim); }
 
 <script type="module">
 // ---------------------------------------------------------------- constants
-const APP_VERSION = 15; // MUST equal the sw.js cache number (loungeremote-v13). Shown to the user as v2.3 (see label in PATCH_NOTES)
+const APP_VERSION = 16; // MUST equal the sw.js cache number (loungeremote-v13). Shown to the user as v2.3 (see label in PATCH_NOTES)
 const PATCH_NOTES = [
+  { v: 16, label: '2.3', date: '2026-11-08', title: 'Remote tab', items: [
+    'Remote now lives in a bottom bar next to Home, with the Lounge logo as its icon',
+    'The remote is coloured to match the Lounge logo'
+  ] },
   { v: 15, label: '2.3', date: '2026-11-08', title: 'Remote looks like the real remote', items: [
     'The Remote screen is now drawn like the Chromecast remote: round pad with OK, Back, Type, Home, Mute, Vol +/\u2212, and the Power / Input strip'
   ] },
@@ -1969,7 +1990,6 @@ $('sheetKb').addEventListener('submit', (e) => {
 });
 $('typeChip').addEventListener('click', () => openSheet('kb'));
 $('rType').addEventListener('click', () => openSheet('kb'));
-$('remoteChip').addEventListener('click', () => openSubView('remote'));
 $('rBack').addEventListener('click', () => { buzz(); send('back'); });
 $('rHome').addEventListener('click', () => { buzz(); send('home'); });
 $('rPower').addEventListener('click', () => pressPower());
@@ -2074,31 +2094,42 @@ function renderView() {
   const paired = !!S.key;
   const apps = paired && view === 'apps';
   const rem = paired && view === 'remote';
-  const sub = apps || rem;
-  $('mainView').hidden = sub;
+  $('mainView').hidden = apps || rem;
   $('appsView').hidden = !apps;
   $('ctrlView').hidden = !rem;
-  $('appsBack').hidden = !sub;
-  $('tvTile').hidden = sub;
-  $('topPower').hidden = !paired || sub;
-  $('tvName').textContent = apps ? 'All apps' : rem ? 'Remote' : ((S.status && S.status.name) || '');
+  $('appsBack').hidden = !apps;
+  $('tvTile').hidden = apps;
+  $('topPower').hidden = !paired || apps || rem;
+  $('tvName').textContent = apps ? 'All apps' : ((S.status && S.status.name) || '');
   $('tvSub').hidden = true;
+  const nav = paired && !apps;
+  $('bottomNav').hidden = !nav;
+  document.body.classList.toggle('has-nav', nav);
+  $('navHome').setAttribute('aria-current', rem ? 'false' : 'page');
+  $('navRemote').setAttribute('aria-current', rem ? 'page' : 'false');
 }
-function openSubView(name) {
-  if (view === name) return;
+function setTab(name) {
+  if (view === name || view === 'apps') return;
   closeMenu(); closeSheet(true); stopKey();
-  const fromSub = view !== 'main';
   view = name;
-  if (!fromSub) { try { history.pushState({ lrApps: 1 }, ''); } catch (e) {} }
   renderView();
-  const v = $(name === 'apps' ? 'appsView' : 'ctrlView');
+  const v = $(name === 'remote' ? 'ctrlView' : 'mainView');
   v.classList.remove('view-in'); void v.offsetWidth; v.classList.add('view-in');
   scrollTo(0, 0);
 }
-const openAppsView = () => openSubView('apps');
+function openAppsView() {
+  if (view === 'apps') return;
+  closeMenu(); closeSheet(true); stopKey();
+  view = 'apps';
+  try { history.pushState({ lrApps: 1 }, ''); } catch (e) {}
+  renderView();
+  const v = $('appsView');
+  v.classList.remove('view-in'); void v.offsetWidth; v.classList.add('view-in');
+  scrollTo(0, 0);
+}
 function closeAppsView(fromPop) {
-  if (view === 'main') return;
-  closeMenu(); endDrag(true); stopKey();
+  if (view !== 'apps') return;
+  closeMenu(); endDrag(true);
   view = 'main';
   if (!fromPop && history.state && history.state.lrApps) { try { history.back(); } catch (e) {} }
   renderView();
@@ -2106,7 +2137,9 @@ function closeAppsView(fromPop) {
   v.classList.remove('view-in'); void v.offsetWidth; v.classList.add('view-in');
   scrollTo(0, 0);
 }
-addEventListener('popstate', () => { if (view !== 'main') closeAppsView(true); });
+addEventListener('popstate', () => { if (view === 'apps') closeAppsView(true); });
+$('navHome').addEventListener('click', () => setTab('main'));
+$('navRemote').addEventListener('click', () => setTab('remote'));
 $('appsBack').innerHTML = icon('back');
 $('appsBack').addEventListener('click', () => closeAppsView(false));
 
@@ -2146,7 +2179,7 @@ function renderRemote() {
   tv.title = sub ? `${t} · ${sub}` : t;
   tv.hidden = true; // header no longer shows the TV status line
   $('topPower').title = sub ? `Power · ${sub}` : 'Power';
-  if (view === 'main') $('tvName').textContent = (S.status && S.status.name) || '';
+  if (view !== 'apps') $('tvName').textContent = (S.status && S.status.name) || '';
   const braviaOn = !!(S.status && S.status.power === 'bravia');
   $('inputChip').hidden = !braviaOn; $('rInput').hidden = !braviaOn;
   $('keysNote').hidden = !(S.status && S.status.keys === false);
