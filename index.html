@@ -142,11 +142,12 @@ svg { display: block; }
 .chip.offline .dot { background: var(--warn); }
 
 main { padding: 4px 16px calc(28px + env(safe-area-inset-bottom)); max-width: 480px; margin: 0 auto; }
-body.has-nav main { padding-bottom: calc(104px + env(safe-area-inset-bottom)); }
+body.has-nav main { padding-bottom: calc(104px + env(safe-area-inset-bottom)); min-height: 100vh; min-height: 100dvh; }
 .bnav {
   position: fixed; left: 0; right: 0; bottom: 0; z-index: 30; display: flex; justify-content: center; gap: 8px;
   padding: 8px 16px calc(10px + env(safe-area-inset-bottom)); background: var(--surface-2);
   box-shadow: 0 -1px 0 var(--outline-var);
+  transform: translateZ(0); will-change: transform; contain: layout paint;
 }
 .bnav[hidden] { display: none; }
 .bnav-btn { flex: 1; max-width: 200px; display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--on-var); font-size: 12px; font-weight: 500; padding: 0; }
@@ -392,6 +393,8 @@ body.has-nav main { padding-bottom: calc(104px + env(safe-area-inset-bottom)); }
 
 /* All apps page */
 .view-in { animation: slideIn .38s var(--emph); }
+@keyframes tabFade { from { opacity: 0; } to { opacity: 1; } }
+.tab-in { animation: tabFade .18s ease-out; }
 @keyframes slideIn { from { opacity: 0; transform: translateX(28px); } to { opacity: 1; transform: none; } }
 .apps-page { display: flex; flex-direction: column; gap: 22px; padding-top: 4px; }
 .sec h2 { font-size: 15px; font-weight: 500; margin: 0 0 10px 4px; color: var(--on); }
@@ -817,8 +820,11 @@ dialog.dlg::backdrop { background: var(--scrim); }
 
 <script type="module">
 // ---------------------------------------------------------------- constants
-const APP_VERSION = 17; // MUST equal the sw.js cache number (loungeremote-v17). Shown to the user as v2.3 (see label in PATCH_NOTES)
+const APP_VERSION = 18; // MUST equal the sw.js cache number (loungeremote-v18). Shown to the user as v2.3 (see label in PATCH_NOTES)
 const PATCH_NOTES = [
+  { v: 18, label: '2.3', date: '2026-11-08', title: 'Smoother tabs', items: [
+    'Switching between Home and Remote no longer makes the bottom bar jump'
+  ] },
   { v: 17, label: '2.3', date: '2026-11-08', title: 'Remote spacing', items: [
     'The Remote screen is back to its full-size spacing; scroll to reach Power and Input'
   ] },
@@ -2117,7 +2123,7 @@ function setTab(name) {
   view = name;
   renderView();
   const v = $(name === 'remote' ? 'ctrlView' : 'mainView');
-  v.classList.remove('view-in'); void v.offsetWidth; v.classList.add('view-in');
+  v.classList.remove('tab-in'); void v.offsetWidth; v.classList.add('tab-in');
   scrollTo(0, 0);
 }
 function openAppsView() {
