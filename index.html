@@ -264,13 +264,56 @@ main { padding: 4px 16px calc(28px + env(safe-area-inset-bottom)); max-width: 48
 }
 .dpad button { touch-action: none; }
 .dpad-cross { position: absolute; left: 50%; top: 50%; width: 220px; height: 220px; margin: -110px 0 0 -110px; }
-.remote-page { display: flex; flex-direction: column; gap: 20px; padding-bottom: 24px; }
-.rgrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
-.rbtn { height: 64px; border-radius: 24px; background: var(--sc); color: var(--on-sc); display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 15px; font-weight: 500; }
-.rbtn svg { width: 24px; height: 24px; }
-.rbtn:active { border-radius: 14px; }
-.rbtn.on { background: var(--pc); color: var(--on-pc); }
-.rbtn[hidden] { display: none; }
+.remote-page { display: flex; flex-direction: column; align-items: center; padding: 8px 0 28px; }
+.rbody {
+  --rb-ink: #5b5f63; --rb-edge: #d6d9dc;
+  width: min(300px, 100%); padding: 22px 20px 26px; border-radius: 150px 150px 44px 44px;
+  background: linear-gradient(180deg, #fbfbfc, #f1f2f3); color: var(--rb-ink);
+  box-shadow: 0 10px 34px rgba(0,0,0,.35), inset 0 0 0 1px #e4e6e8;
+  display: flex; flex-direction: column; align-items: center; gap: 22px;
+}
+.rbody .dpad {
+  width: 256px; height: 256px; margin: 0; border-radius: 50%;
+  background: radial-gradient(circle at 50% 35%, #ffffff, #f2f3f4 80%);
+  box-shadow: inset 0 0 0 1px var(--rb-edge), 0 3px 8px rgba(0,0,0,.12);
+}
+.rbody .dpad-cross { left: 0; top: 0; width: 100%; height: 100%; margin: 0; }
+.rbody .wedge[data-key] { width: 84px; height: 76px; border-radius: 38px; color: #8c9195; background: transparent; }
+.rbody .wedge[data-key="up"] { left: 86px; top: 8px; }
+.rbody .wedge[data-key="down"] { left: 86px; top: auto; bottom: 8px; }
+.rbody .wedge[data-key="left"] { left: 6px; top: 90px; }
+.rbody .wedge[data-key="right"] { left: auto; right: 6px; top: 90px; }
+.rbody .wedge.pressed { background: #e1e4e7; color: #3c4043; transform: scale(.94); }
+.rbody .dpad-ok {
+  left: 76px; top: 76px; width: 104px; height: 104px; border-radius: 50%;
+  background: linear-gradient(180deg, #ffffff, #f3f4f5); box-shadow: inset 0 0 0 1px var(--rb-edge), 0 2px 5px rgba(0,0,0,.14);
+  color: var(--rb-ink);
+}
+.rbody .dpad-ok.pressed { background: #e1e4e7; transform: scale(.95); filter: none; }
+.rgrid { display: grid; grid-template-columns: repeat(2, 92px); gap: 22px 52px; justify-content: center; }
+.rbtn {
+  width: 92px; height: 92px; border-radius: 50%; padding: 0; display: grid; place-items: center;
+  background: linear-gradient(180deg, #ffffff, #f1f2f3); color: var(--rb-ink);
+  box-shadow: inset 0 0 0 1px var(--rb-edge), 0 3px 6px rgba(0,0,0,.16);
+  font: 800 16px/1 'Roboto Condensed', 'Arial Narrow', Arial, sans-serif; letter-spacing: .3px;
+}
+.rbtn svg { width: 30px; height: 30px; }
+.rbtn:active { transform: scale(.94); box-shadow: inset 0 0 0 1px var(--rb-edge), 0 1px 2px rgba(0,0,0,.2); border-radius: 50%; }
+.rbtn.rdark { background: radial-gradient(circle at 35% 30%, #2a2a2a, #000); color: #fff; box-shadow: 0 3px 8px rgba(0,0,0,.4); }
+.rbtn.on { background: #d9e2ff; color: #1a3c8c; }
+#rMute span { display: none; }
+.rpill {
+  width: 100%; height: 80px; border-radius: 40px; display: flex; align-items: center; justify-content: space-around;
+  background: linear-gradient(180deg, #e9eaec, #f6f7f8); box-shadow: inset 0 2px 5px rgba(0,0,0,.14), inset 0 0 0 1px #e1e3e5;
+}
+.rdash { width: 14px; height: 5px; border-radius: 3px; background: #3c4043; }
+.rsmall {
+  width: 58px; height: 58px; border-radius: 50%; display: grid; place-items: center; color: var(--rb-ink);
+  background: linear-gradient(180deg, #ffffff, #f1f2f3); box-shadow: inset 0 0 0 1px var(--rb-edge), 0 2px 4px rgba(0,0,0,.2);
+}
+.rsmall svg { width: 26px; height: 26px; }
+.rsmall:active { transform: scale(.93); border-radius: 50%; }
+.rsmall[hidden] { display: none; }
 .wedge {
   position: absolute; width: 70px; height: 70px; display: grid; place-items: center;
   background: transparent; color: var(--on-var);
@@ -630,24 +673,29 @@ dialog.dlg::backdrop { background: var(--scrim); }
     <!-- Remote page (v14): the full TV-remote layout -->
     <div id="ctrlView" class="remote-page" hidden>
       <p id="keysNote" class="note" hidden><span data-icon="remote"></span><span>Arrows need the Lounge home button service on the TV (Google TV box, Android 13+).</span></p>
-      <div id="dpad" class="dpad" role="group" aria-label="Direction pad">
-        <div class="dpad-cross">
-          <button type="button" class="wedge" data-key="up" aria-label="Up"><span class="chev" data-icon="expand"></span></button>
-          <button type="button" class="wedge" data-key="right" aria-label="Right"><span class="chev" data-icon="expand"></span></button>
-          <button type="button" class="wedge" data-key="down" aria-label="Down"><span class="chev" data-icon="expand"></span></button>
-          <button type="button" class="wedge" data-key="left" aria-label="Left"><span class="chev" data-icon="expand"></span></button>
-          <button type="button" class="dpad-ok" data-key="ok" aria-label="OK">OK</button>
+      <div class="rbody">
+        <div id="dpad" class="dpad" role="group" aria-label="Direction pad">
+          <div class="dpad-cross">
+            <button type="button" class="wedge" data-key="up" aria-label="Up"><span class="chev" data-icon="expand"></span></button>
+            <button type="button" class="wedge" data-key="right" aria-label="Right"><span class="chev" data-icon="expand"></span></button>
+            <button type="button" class="wedge" data-key="down" aria-label="Down"><span class="chev" data-icon="expand"></span></button>
+            <button type="button" class="wedge" data-key="left" aria-label="Left"><span class="chev" data-icon="expand"></span></button>
+            <button type="button" class="dpad-ok" data-key="ok" aria-label="OK"></button>
+          </div>
         </div>
-      </div>
-      <div class="rgrid">
-        <button type="button" id="rBack" class="rbtn press"><span data-icon="back"></span>Back</button>
-        <button type="button" id="rType" class="rbtn press"><span data-icon="keyboard"></span>Type</button>
-        <button type="button" id="rHome" class="rbtn press"><span data-icon="home"></span>Home</button>
-        <button type="button" id="rMute" class="rbtn press" data-vol="mute" aria-pressed="false"></button>
-        <button type="button" id="rVolUp" class="rbtn press" data-vol="up"><span data-icon="plus"></span>Vol +</button>
-        <button type="button" id="rVolDown" class="rbtn press" data-vol="down"><span data-icon="minus"></span>Vol −</button>
-        <button type="button" id="rPower" class="rbtn press"><span data-icon="power"></span>Power</button>
-        <button type="button" id="rInput" class="rbtn press" aria-haspopup="dialog" hidden><span data-icon="input"></span>Input</button>
+        <div class="rgrid">
+          <button type="button" id="rBack" class="rbtn press" aria-label="Back"><span data-icon="back"></span></button>
+          <button type="button" id="rType" class="rbtn rdark press" aria-label="Type with keyboard"><span data-icon="keyboard"></span></button>
+          <button type="button" id="rHome" class="rbtn press" aria-label="Home"><span data-icon="home"></span></button>
+          <button type="button" id="rMute" class="rbtn press" data-vol="mute" aria-label="Mute" aria-pressed="false"></button>
+          <button type="button" id="rVolUp" class="rbtn rtxt press" data-vol="up" aria-label="Volume up">VOL +</button>
+          <button type="button" id="rVolDown" class="rbtn rtxt press" data-vol="down" aria-label="Volume down">VOL &minus;</button>
+        </div>
+        <div class="rpill">
+          <button type="button" id="rPower" class="rsmall press" aria-label="Power"><span data-icon="power"></span></button>
+          <span class="rdash"></span>
+          <button type="button" id="rInput" class="rsmall press" aria-haspopup="dialog" aria-label="Input" hidden><span data-icon="input"></span></button>
+        </div>
       </div>
     </div>
 
@@ -752,8 +800,11 @@ dialog.dlg::backdrop { background: var(--scrim); }
 
 <script type="module">
 // ---------------------------------------------------------------- constants
-const APP_VERSION = 14; // MUST equal the sw.js cache number (loungeremote-v13). Shown to the user as v2.3 (see label in PATCH_NOTES)
+const APP_VERSION = 15; // MUST equal the sw.js cache number (loungeremote-v13). Shown to the user as v2.3 (see label in PATCH_NOTES)
 const PATCH_NOTES = [
+  { v: 15, label: '2.3', date: '2026-11-08', title: 'Remote looks like the real remote', items: [
+    'The Remote screen is now drawn like the Chromecast remote: round pad with OK, Back, Type, Home, Mute, Vol +/\u2212, and the Power / Input strip'
+  ] },
   { v: 14, label: '2.3', date: '2026-11-08', title: 'A real Remote screen', items: [
     'The remote is back as its own screen: tap Remote on the main screen for a round direction pad with OK, plus Back, Home, Type, Mute, Vol + / Vol \u2212, Power and Input',
     'The arrows are real directional buttons now (hold to repeat), and the swipe touchpad is gone',
