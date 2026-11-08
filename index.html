@@ -781,8 +781,11 @@ dialog.dlg::backdrop { background: var(--scrim); }
 
 <script type="module">
 // ---------------------------------------------------------------- constants
-const APP_VERSION = 12; // MUST equal the sw.js cache number (loungeremote-v12). Shown to the user as v2.1 (see label in PATCH_NOTES)
+const APP_VERSION = 13; // MUST equal the sw.js cache number (loungeremote-v13). Shown to the user as v2.2 (see label in PATCH_NOTES)
 const PATCH_NOTES = [
+  { v: 13, label: '2.2', date: '2026-11-08', title: 'Home switches the TV', items: [
+    'Home now also switches the TV to the HDMI port your TV box is on, then opens Lounge (needs Lounge 7 on the TV box)',
+  ] },
   { v: 12, label: '2.1', date: '2026-11-06', title: 'New app icon', items: [
     'A new remote-control app icon replaces the old L. Remove and re-add the app to your home screen to see it',
     'The same icon now shows in the top corner of the app, replacing the old TV tile',
