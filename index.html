@@ -257,55 +257,23 @@ main { padding: 4px 16px calc(28px + env(safe-area-inset-bottom)); max-width: 48
 .np-play:active { border-radius: 14px; transform: scale(.94); transition-duration: .15s; }
 .np-play svg { width: 32px; height: 32px; }
 
-/* Touchpad + classic D-pad (same footprint, toggled) */
-.pad-wrap { position: relative; }
-.pad-mode { position: absolute; top: 6px; right: 6px; z-index: 3; color: var(--on-var); }
-.pad {
-  position: relative; height: 232px; border-radius: 36px; overflow: hidden;
-  background: var(--surface-2); outline: none;
-  touch-action: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none;
-  background-image: radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--primary) 7%, transparent), transparent 70%);
-}
-.pad:focus-visible { box-shadow: inset 0 0 0 2px var(--primary); }
-.pad-hint {
-  position: absolute; left: 0; right: 0; top: 50%; transform: translateY(-50%); text-align: center;
-  font-size: 13px; color: var(--outline); pointer-events: none; transition: opacity .3s; padding: 0 56px;
-}
-.pad.active .pad-hint { opacity: 0; }
-.pad-chev { position: absolute; color: var(--outline-var); pointer-events: none; transition: color .25s, opacity .25s; }
-.pad-chev svg { width: 28px; height: 28px; transition: transform .25s var(--spring); }
-.pad-chev.up { top: 8px; left: 50%; margin-left: -14px; }
-.pad-chev.up svg { transform: rotate(180deg); }
-.pad-chev.down { bottom: 8px; left: 50%; margin-left: -14px; }
-.pad-chev.left { left: 8px; top: 50%; margin-top: -14px; }
-.pad-chev.left svg { transform: rotate(90deg); }
-.pad-chev.right { right: 8px; top: 50%; margin-top: -14px; }
-.pad-chev.right svg { transform: rotate(-90deg); }
-.pad-chev.flash { color: var(--primary); transition-duration: 0s; }
-.pad-chev.flash.up svg { transform: rotate(180deg) translateY(4px); }
-.pad-chev.flash.down svg { transform: translateY(4px); }
-.pad-chev.flash.left svg { transform: rotate(90deg) translateY(4px); }
-.pad-chev.flash.right svg { transform: rotate(-90deg) translateY(4px); }
-.pad-dot {
-  position: absolute; left: 0; top: 0; width: 48px; height: 48px; margin: -24px 0 0 -24px; border-radius: 50%;
-  background: color-mix(in srgb, var(--primary) 30%, transparent);
-  opacity: 0; transform: scale(.5); transition: opacity .18s, transform .25s var(--spring); pointer-events: none;
-}
-.pad.active .pad-dot { opacity: 1; transform: scale(1); }
-.pad-ripple {
-  position: absolute; width: 140px; height: 140px; margin: -70px 0 0 -70px; border-radius: 50%;
-  background: var(--primary); pointer-events: none; animation: ripple .45s ease-out forwards;
-}
-@keyframes ripple { from { transform: scale(.15); opacity: .32; } to { transform: scale(1.5); opacity: 0; } }
+/* Remote page: ring D-pad + button grid */
 .dpad {
-  position: relative; height: 232px; border-radius: 36px; background: var(--surface-2);
+  position: relative; width: 248px; height: 248px; margin: 4px auto 0; border-radius: 50%; background: var(--surface-2);
   touch-action: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none;
 }
 .dpad button { touch-action: none; }
 .dpad-cross { position: absolute; left: 50%; top: 50%; width: 220px; height: 220px; margin: -110px 0 0 -110px; }
+.remote-page { display: flex; flex-direction: column; gap: 20px; padding-bottom: 24px; }
+.rgrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.rbtn { height: 64px; border-radius: 24px; background: var(--sc); color: var(--on-sc); display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 15px; font-weight: 500; }
+.rbtn svg { width: 24px; height: 24px; }
+.rbtn:active { border-radius: 14px; }
+.rbtn.on { background: var(--pc); color: var(--on-pc); }
+.rbtn[hidden] { display: none; }
 .wedge {
   position: absolute; width: 70px; height: 70px; display: grid; place-items: center;
-  background: var(--surface-4); color: var(--on-var);
+  background: transparent; color: var(--on-var);
   transition: border-radius .35s var(--spring), transform .35s var(--spring), background-color .15s, color .15s;
 }
 .wedge[data-key="up"] { left: 75px; top: 0; border-radius: 34px 34px 20px 20px; }
@@ -325,7 +293,7 @@ main { padding: 4px 16px calc(28px + env(safe-area-inset-bottom)); max-width: 48
 .dpad-ok.pressed { border-radius: 20px; transform: scale(.93); filter: brightness(.9); transition-duration: .12s; }
 
 /* Four main actions */
-.acts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+.acts { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 8px; }
 .act {
   height: 72px; border-radius: 26px; background: var(--sc); color: var(--on-sc);
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
@@ -638,38 +606,17 @@ dialog.dlg::backdrop { background: var(--scrim); }
         </div>
       </section>
 
-      <p id="keysNote" class="note" hidden><span data-icon="remote"></span><span>Arrows need the Lounge home button service on the TV (Google TV box, Android 13+).</span></p>
-      <div id="padWrap" class="pad-wrap">
-        <button id="padModeBtn" type="button" class="icon-btn press pad-mode" aria-label="Switch to D-pad"></button>
-        <div id="pad" class="pad" role="application" tabindex="0" aria-label="Touchpad. Swipe to move, tap to select. Arrow keys and Enter also work.">
-          <span class="pad-chev up" data-icon="expand"></span>
-          <span class="pad-chev down" data-icon="expand"></span>
-          <span class="pad-chev left" data-icon="expand"></span>
-          <span class="pad-chev right" data-icon="expand"></span>
-          <span class="pad-hint">Swipe to move · tap to select</span>
-          <span id="padDot" class="pad-dot"></span>
-        </div>
-        <div id="dpad" class="dpad" role="group" aria-label="Direction pad" hidden>
-          <div class="dpad-cross">
-            <button type="button" class="wedge" data-key="up" aria-label="Up"><span class="chev" data-icon="expand"></span></button>
-            <button type="button" class="wedge" data-key="right" aria-label="Right"><span class="chev" data-icon="expand"></span></button>
-            <button type="button" class="wedge" data-key="down" aria-label="Down"><span class="chev" data-icon="expand"></span></button>
-            <button type="button" class="wedge" data-key="left" aria-label="Left"><span class="chev" data-icon="expand"></span></button>
-            <button type="button" class="dpad-ok" data-key="ok" aria-label="OK">OK</button>
-          </div>
-        </div>
-      </div>
-
       <div class="acts">
         <button id="backBtn" type="button" class="act press"><span data-icon="back"></span>Back</button>
         <button id="homeBtn" type="button" class="act press"><span data-icon="home"></span>Home</button>
-        <button id="typeChip" type="button" class="act press"><span data-icon="keyboard"></span>Type</button>
+        <button id="inputChip" type="button" class="act press" aria-haspopup="dialog" hidden><span data-icon="input"></span>Input</button>
         <button id="volBtn" type="button" class="act press" aria-haspopup="dialog"><span id="volBtnIcon"></span>Volume</button>
       </div>
       <div class="chip-row">
+        <button type="button" id="remoteChip" class="act-chip press"><span data-icon="remote"></span>Remote</button>
+        <button type="button" id="typeChip" class="act-chip press"><span data-icon="keyboard"></span>Type</button>
         <button type="button" id="ppChip" class="act-chip press" hidden><span data-icon="playpause"></span>Play/pause</button>
         <button type="button" id="sleepChip" class="act-chip press" aria-haspopup="dialog"><span data-icon="moon"></span><span id="sleepChipText">Sleep</span></button>
-        <button type="button" id="inputChip" class="act-chip press" aria-haspopup="dialog" hidden><span data-icon="input"></span>Input</button>
         <button type="button" id="linkChip" class="act-chip press" aria-haspopup="dialog"><span data-icon="link"></span>Send link</button>
       </div>
 
@@ -678,6 +625,30 @@ dialog.dlg::backdrop { background: var(--scrim); }
         <div id="appsRow" class="apps-row"></div>
         <p id="appsRowNote" class="muted" hidden></p>
       </section>
+    </div>
+
+    <!-- Remote page (v14): the full TV-remote layout -->
+    <div id="ctrlView" class="remote-page" hidden>
+      <p id="keysNote" class="note" hidden><span data-icon="remote"></span><span>Arrows need the Lounge home button service on the TV (Google TV box, Android 13+).</span></p>
+      <div id="dpad" class="dpad" role="group" aria-label="Direction pad">
+        <div class="dpad-cross">
+          <button type="button" class="wedge" data-key="up" aria-label="Up"><span class="chev" data-icon="expand"></span></button>
+          <button type="button" class="wedge" data-key="right" aria-label="Right"><span class="chev" data-icon="expand"></span></button>
+          <button type="button" class="wedge" data-key="down" aria-label="Down"><span class="chev" data-icon="expand"></span></button>
+          <button type="button" class="wedge" data-key="left" aria-label="Left"><span class="chev" data-icon="expand"></span></button>
+          <button type="button" class="dpad-ok" data-key="ok" aria-label="OK">OK</button>
+        </div>
+      </div>
+      <div class="rgrid">
+        <button type="button" id="rBack" class="rbtn press"><span data-icon="back"></span>Back</button>
+        <button type="button" id="rType" class="rbtn press"><span data-icon="keyboard"></span>Type</button>
+        <button type="button" id="rHome" class="rbtn press"><span data-icon="home"></span>Home</button>
+        <button type="button" id="rMute" class="rbtn press" data-vol="mute" aria-pressed="false"></button>
+        <button type="button" id="rVolUp" class="rbtn press" data-vol="up"><span data-icon="plus"></span>Vol +</button>
+        <button type="button" id="rVolDown" class="rbtn press" data-vol="down"><span data-icon="minus"></span>Vol −</button>
+        <button type="button" id="rPower" class="rbtn press"><span data-icon="power"></span>Power</button>
+        <button type="button" id="rInput" class="rbtn press" aria-haspopup="dialog" hidden><span data-icon="input"></span>Input</button>
+      </div>
     </div>
 
     <!-- All apps page (opened from the apps row) -->
@@ -781,8 +752,13 @@ dialog.dlg::backdrop { background: var(--scrim); }
 
 <script type="module">
 // ---------------------------------------------------------------- constants
-const APP_VERSION = 13; // MUST equal the sw.js cache number (loungeremote-v13). Shown to the user as v2.2 (see label in PATCH_NOTES)
+const APP_VERSION = 14; // MUST equal the sw.js cache number (loungeremote-v13). Shown to the user as v2.3 (see label in PATCH_NOTES)
 const PATCH_NOTES = [
+  { v: 14, label: '2.3', date: '2026-11-08', title: 'A real Remote screen', items: [
+    'The remote is back as its own screen: tap Remote on the main screen for a round direction pad with OK, plus Back, Home, Type, Mute, Vol + / Vol \u2212, Power and Input',
+    'The arrows are real directional buttons now (hold to repeat), and the swipe touchpad is gone',
+    'The main screen is slimmer: Back, Home, Input and Volume stay right there'
+  ] },
   { v: 13, label: '2.2', date: '2026-11-08', title: 'Home switches the TV', items: [
     'Home now also switches the TV to the HDMI port your TV box is on, then opens Lounge (needs Lounge 7 on the TV box)',
   ] },
@@ -845,7 +821,6 @@ const LS_THEME = 'lounge_remote_theme';
 const LS_SEEN = 'lounge_remote_lastSeenVer';
 const LS_PROFILE = 'lounge_remote_profile';
 const LS_PROFILE_ASKED = 'lounge_remote_profileAsked';
-const LS_PAD = 'lounge_remote_padMode';
 const KEY_RE = /^[a-z]+(-[a-z]+){3}$/;
 const ONLINE_MS = 150000;
 const PENDING_MS = 5000;
@@ -1449,7 +1424,7 @@ function disconnect() {
   S.apps = {}; S.icons = {}; S.layout = normLayout(null); S.layoutLoaded = false; S.layoutSig = '';
   clearPending(); S.search = ''; $('searchInput').value = ''; S.hiddenOpen = false;
   S.np = normNowPlaying(null); S.art = null; S.volume = null; S.sleep = null; S.input = normInput(null); S.power = null;
-  stopKey(); padEnd(); endScrub(); volDrag = null; volPreview = null;
+  stopKey(); endScrub(); volDrag = null; volPreview = null;
   endDrag(true);
   releaseHold();
   closeSheet(true);
@@ -1796,10 +1771,19 @@ function renderVolume() {
   mb.innerHTML = icon(muted ? 'muted' : 'volume') + `<span>${muted ? 'Unmute' : 'Mute'}</span>`;
   mb.classList.toggle('on', muted);
   mb.setAttribute('aria-pressed', String(muted));
+  const rm = $('rMute');
+  rm.innerHTML = icon(muted ? 'muted' : 'volume') + `<span>${muted ? 'Unmute' : 'Mute'}</span>`;
+  rm.classList.toggle('on', muted);
+  rm.setAttribute('aria-pressed', String(muted));
   $('volBtnIcon').innerHTML = icon(muted ? 'muted' : 'volume');
   $('volBtn').classList.toggle('on', muted);
   $('volBtn').setAttribute('aria-label', muted ? 'Volume (muted)' : 'Volume');
 }
+$('ctrlView').addEventListener('click', (e) => {
+  const b = e.target.closest('[data-vol]'); if (!b) return;
+  buzz();
+  sendCmd({ type: 'volume', action: b.dataset.vol });
+});
 $('sheetVol').addEventListener('click', (e) => {
   const b = e.target.closest('[data-vol]'); if (!b) return;
   buzz();
@@ -1933,6 +1917,11 @@ $('sheetKb').addEventListener('submit', (e) => {
   sendCmd({ type: 'submit' });
 });
 $('typeChip').addEventListener('click', () => openSheet('kb'));
+$('rType').addEventListener('click', () => openSheet('kb'));
+$('remoteChip').addEventListener('click', () => openSubView('remote'));
+$('rBack').addEventListener('click', () => { buzz(); send('back'); });
+$('rHome').addEventListener('click', () => { buzz(); send('home'); });
+$('rPower').addEventListener('click', () => pressPower());
 
 // ---------------------------------------------------------------- send a link / share target
 function setLinkError(on) {
@@ -2033,27 +2022,32 @@ let view = 'main';
 function renderView() {
   const paired = !!S.key;
   const apps = paired && view === 'apps';
-  $('mainView').hidden = apps;
+  const rem = paired && view === 'remote';
+  const sub = apps || rem;
+  $('mainView').hidden = sub;
   $('appsView').hidden = !apps;
-  $('appsBack').hidden = !apps;
-  $('tvTile').hidden = apps;
-  $('topPower').hidden = !paired || apps;
-  $('tvName').textContent = apps ? 'All apps' : ((S.status && S.status.name) || '');
+  $('ctrlView').hidden = !rem;
+  $('appsBack').hidden = !sub;
+  $('tvTile').hidden = sub;
+  $('topPower').hidden = !paired || sub;
+  $('tvName').textContent = apps ? 'All apps' : rem ? 'Remote' : ((S.status && S.status.name) || '');
   $('tvSub').hidden = true;
 }
-function openAppsView() {
-  if (view === 'apps') return;
-  closeMenu(); closeSheet(true); stopKey(); padEnd();
-  view = 'apps';
-  try { history.pushState({ lrApps: 1 }, ''); } catch (e) {}
+function openSubView(name) {
+  if (view === name) return;
+  closeMenu(); closeSheet(true); stopKey();
+  const fromSub = view !== 'main';
+  view = name;
+  if (!fromSub) { try { history.pushState({ lrApps: 1 }, ''); } catch (e) {} }
   renderView();
-  const v = $('appsView');
+  const v = $(name === 'apps' ? 'appsView' : 'ctrlView');
   v.classList.remove('view-in'); void v.offsetWidth; v.classList.add('view-in');
   scrollTo(0, 0);
 }
+const openAppsView = () => openSubView('apps');
 function closeAppsView(fromPop) {
-  if (view !== 'apps') return;
-  closeMenu(); endDrag(true);
+  if (view === 'main') return;
+  closeMenu(); endDrag(true); stopKey();
   view = 'main';
   if (!fromPop && history.state && history.state.lrApps) { try { history.back(); } catch (e) {} }
   renderView();
@@ -2061,7 +2055,7 @@ function closeAppsView(fromPop) {
   v.classList.remove('view-in'); void v.offsetWidth; v.classList.add('view-in');
   scrollTo(0, 0);
 }
-addEventListener('popstate', () => { if (view === 'apps') closeAppsView(true); });
+addEventListener('popstate', () => { if (view !== 'main') closeAppsView(true); });
 $('appsBack').innerHTML = icon('back');
 $('appsBack').addEventListener('click', () => closeAppsView(false));
 
@@ -2101,11 +2095,13 @@ function renderRemote() {
   tv.title = sub ? `${t} · ${sub}` : t;
   tv.hidden = true; // header no longer shows the TV status line
   $('topPower').title = sub ? `Power · ${sub}` : 'Power';
-  if (view !== 'apps') $('tvName').textContent = (S.status && S.status.name) || '';
-  $('inputChip').hidden = !(S.status && S.status.power === 'bravia');
+  if (view === 'main') $('tvName').textContent = (S.status && S.status.name) || '';
+  const braviaOn = !!(S.status && S.status.power === 'bravia');
+  $('inputChip').hidden = !braviaOn; $('rInput').hidden = !braviaOn;
   $('keysNote').hidden = !(S.status && S.status.keys === false);
 }
 $('inputChip').addEventListener('click', () => openSheet('input'));
+$('rInput').addEventListener('click', () => openSheet('input'));
 $('sheetInput').addEventListener('click', (e) => {
   const b = e.target.closest('[data-port]'); if (!b) return;
   const port = Number(b.dataset.port);
@@ -2153,111 +2149,7 @@ dpad.addEventListener('contextmenu', (e) => e.preventDefault());
 // Keyboard activation (Enter/Space) arrives as a click with detail 0; pointer presses are handled above.
 dpad.addEventListener('click', (e) => { const b = e.target.closest('[data-key]'); if (b && e.detail === 0) sendKey(b.dataset.key); });
 
-// ---- Swipe touchpad: swipe = one D-pad key per 30 px, tap = OK; hold after a swipe (or keep dragging) repeats.
-const PAD_STEP = 30, PAD_TAP = 12, PAD_HOLD = 450, PAD_EVERY = 120;
-const pad = $('pad'), padDot = $('padDot');
-let padG = null;
-function padFlash(dir) {
-  const c = pad.querySelector('.pad-chev.' + dir); if (!c) return;
-  c.classList.remove('flash'); void c.offsetWidth; c.classList.add('flash');
-  clearTimeout(c._t); c._t = setTimeout(() => c.classList.remove('flash'), 160);
-}
-function padStep(dir) { sendKey(dir, 8); padFlash(dir); }
-function padStopRepeat(g) { if (g && g.rep) { clearTimeout(g.rep); clearInterval(g.rep); g.rep = 0; } }
-function padArmRepeat(g) {
-  padStopRepeat(g);
-  const dir = g.dir;
-  g.rep = setTimeout(() => {
-    if (padG !== g || g.dir !== dir) return;
-    padStep(dir);
-    g.rep = setInterval(() => { if (padG === g && g.dir === dir) padStep(dir); }, PAD_EVERY);
-  }, PAD_HOLD);
-}
-function padEnd() {
-  const g = padG; if (!g) return;
-  padStopRepeat(g);
-  padG = null;
-  pad.classList.remove('active');
-}
-function padLocal(e) { const r = pad.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; }
-pad.addEventListener('pointerdown', (e) => {
-  if (e.button > 0) return;
-  e.preventDefault();
-  padEnd();
-  try { pad.setPointerCapture(e.pointerId); } catch (er) {}
-  const [x, y] = padLocal(e);
-  padG = { id: e.pointerId, sx: e.clientX, sy: e.clientY, ax: e.clientX, ay: e.clientY, moved: false, dir: null, rep: 0 };
-  padDot.style.left = x + 'px'; padDot.style.top = y + 'px';
-  pad.classList.add('active');
-});
-pad.addEventListener('pointermove', (e) => {
-  const g = padG; if (!g || e.pointerId !== g.id) return;
-  const [x, y] = padLocal(e);
-  padDot.style.left = x + 'px'; padDot.style.top = y + 'px';
-  if (Math.hypot(e.clientX - g.sx, e.clientY - g.sy) > PAD_TAP) g.moved = true;
-  const dx = e.clientX - g.ax, dy = e.clientY - g.ay;
-  const ax = Math.abs(dx), ay = Math.abs(dy);
-  if (Math.max(ax, ay) < PAD_STEP) {
-    // Moving back against the held direction cancels the repeat.
-    if (g.rep && g.dir) {
-      const back = (g.dir === 'left' && dx > 8) || (g.dir === 'right' && dx < -8) || (g.dir === 'up' && dy > 8) || (g.dir === 'down' && dy < -8);
-      if (back) padStopRepeat(g);
-    }
-    return;
-  }
-  const dir = ax >= ay ? (dx > 0 ? 'right' : 'left') : (dy > 0 ? 'down' : 'up');
-  // One step per PAD_STEP travelled; the anchor moves with each step so a long drag keeps stepping.
-  const n = Math.min(4, Math.floor(Math.max(ax, ay) / PAD_STEP));
-  for (let i = 0; i < n; i++) padStep(dir);
-  if (ax >= ay) g.ax += Math.sign(dx) * n * PAD_STEP; else g.ay += Math.sign(dy) * n * PAD_STEP;
-  if (ax >= ay) g.ay = e.clientY; else g.ax = e.clientX;
-  g.dir = dir;
-  padArmRepeat(g); // keep holding still after a swipe = repeat
-});
-function padUp(e, cancelled) {
-  const g = padG; if (!g || e.pointerId !== g.id) return;
-  const tap = !cancelled && !g.moved && !g.dir;
-  const [x, y] = padLocal(e);
-  padEnd();
-  if (tap) {
-    sendKey('ok', 8);
-    const r = document.createElement('span');
-    r.className = 'pad-ripple'; r.style.left = x + 'px'; r.style.top = y + 'px';
-    pad.appendChild(r);
-    setTimeout(() => r.remove(), 500);
-  }
-}
-pad.addEventListener('pointerup', (e) => padUp(e, false));
-pad.addEventListener('pointercancel', (e) => padUp(e, true));
-pad.addEventListener('contextmenu', (e) => e.preventDefault());
-pad.addEventListener('keydown', (e) => {
-  const k = { ArrowUp: 'up', ArrowDown: 'down', ArrowLeft: 'left', ArrowRight: 'right', Enter: 'ok', ' ': 'ok' }[e.key];
-  if (!k) return;
-  e.preventDefault();
-  if (k === 'ok') sendKey('ok'); else padStep(k);
-});
-addEventListener('blur', () => { stopKey(); padEnd(); });
-document.addEventListener('visibilitychange', () => { if (document.hidden) { stopKey(); padEnd(); } });
-
-// Touchpad ⇄ D-pad toggle (remembered on this phone).
-let padMode = lsGet(LS_PAD) === 'dpad' ? 'dpad' : 'touch';
-function renderPadMode() {
-  const d = padMode === 'dpad';
-  $('pad').hidden = d;
-  $('dpad').hidden = !d;
-  const b = $('padModeBtn');
-  b.innerHTML = icon(d ? 'touchpad' : 'dpad');
-  b.setAttribute('aria-label', d ? 'Switch to touchpad' : 'Switch to D-pad');
-  b.title = d ? 'Touchpad' : 'D-pad';
-}
-$('padModeBtn').addEventListener('click', () => {
-  padEnd(); stopKey();
-  padMode = padMode === 'dpad' ? 'touch' : 'dpad';
-  lsSet(LS_PAD, padMode);
-  buzz();
-  renderPadMode();
-});
-$('padWrap').addEventListener('contextmenu', (e) => { if (e.target.closest('button')) e.preventDefault(); });
+$('ctrlView').addEventListener('contextmenu', (e) => { if (e.target.closest('button')) e.preventDefault(); });
 
 // ---------------------------------------------------------------- rendering
 function artHTML(pkg) {
@@ -2546,7 +2438,7 @@ if (shared.found) {
   else setTimeout(() => snack('No link to send'), 0);
 }
 
-renderNowPlaying(); renderVolume(); renderSleep(); renderRemote(); renderView(); renderPadMode();
+renderNowPlaying(); renderVolume(); renderSleep(); renderRemote(); renderView();
 const stored = parseKey(lsGet(LS_KEY));
 if (shared.url && !stored) setTimeout(() => snack('Pair with your TV to send this link'), 0);
 if (stored) connect(stored);
