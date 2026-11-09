@@ -820,8 +820,9 @@ dialog.dlg::backdrop { background: var(--scrim); }
 
 <script type="module">
 // ---------------------------------------------------------------- constants
-const APP_VERSION = 20; // MUST equal the sw.js cache number (loungeremote-v20). Shown to the user as v2.3 (see label in PATCH_NOTES)
+const APP_VERSION = 21; // MUST equal the sw.js cache number (loungeremote-v21). Shown to the user as v2.3 (see label in PATCH_NOTES)
 const PATCH_NOTES = [
+  { v: 21, label: '2.3', date: '2026-11-09', title: 'No stale Now Playing', items: ['Now Playing is hidden while the TV is offline, so a song the TV last played no longer shows up (e.g. when you are out of the house)'] },
   { v: 20, label: '2.3', date: '2026-11-09', title: 'Rounder favourites', items: ['Favourite app tiles on the main screen (and their thumbnails in All apps) have much rounder corners'] },
   { v: 19, label: '2.3', date: '2026-11-08', title: 'Remote button order', items: [
     'Remote: Mute (speaker with a cross) is middle right, Vol − is bottom left and Vol + is bottom right'
@@ -1599,6 +1600,7 @@ function renderChip() {
   card.classList.toggle('offline', !waiting && st === 'offline');
   $('connectTitle').textContent = waiting ? 'Connecting to your TV…' : 'Your TV is offline';
   $('connectSub').textContent = waiting ? 'Make sure the TV is on and Lounge is open.' : 'The TV box is asleep or offline. Turn it on with the TV remote.';
+  renderNowPlaying();
 }
 setInterval(() => { if (S.key) { renderChip(); renderRemote(); } }, 10000);
 
@@ -1647,7 +1649,7 @@ function renderNowPlaying() {
   const np = S.np;
   const st = S.status;
   const noAccess = !!st && st.mediaAccess === false;
-  const none = noAccess || np.state === 'none';
+  const none = noAccess || np.state === 'none' || onlineState() !== 'online'; // offline/unknown: tv/nowPlaying is just the last thing the box published
   // v8: the hero card only shows while something is playing or paused.
   $('npCard').hidden = none;
   $('npNote').hidden = !noAccess;
