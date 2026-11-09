@@ -382,8 +382,8 @@ body.has-nav main { padding-bottom: calc(104px + env(safe-area-inset-bottom)); m
 }
 .apps-row::-webkit-scrollbar { display: none; }
 .app-card { flex: none; width: 112px; display: flex; flex-direction: column; gap: 6px; scroll-snap-align: start; min-width: 0; }
-.app-card .tile-art { width: 100%; border-radius: 18px; transition: border-radius .35s var(--spring); }
-.app-card:active .tile-art { border-radius: 10px; }
+.app-card .tile-art { width: 100%; border-radius: 28px; transition: border-radius .35s var(--spring); }
+.app-card:active .tile-art { border-radius: 18px; }
 .app-card .tile-label { color: var(--on); }
 .all-card .tile-art { background: var(--sc); color: var(--on-sc); }
 .all-card .tile-art svg { width: 28px; height: 28px; }
@@ -418,7 +418,7 @@ body.has-nav main { padding-bottom: calc(104px + env(safe-area-inset-bottom)); m
 .handle svg { width: 22px; height: 22px; }
 .row-main { flex: 1; min-width: 0; display: flex; align-items: center; gap: 12px; height: 48px; text-align: left; border-radius: 14px; padding-right: 4px; }
 .row-label { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 15px; }
-.art-sm { width: 64px; height: 36px; flex: none; border-radius: 10px; overflow: hidden; background: var(--surface-4); display: grid; place-items: center; position: relative; }
+.art-sm { width: 64px; height: 36px; flex: none; border-radius: 16px; overflow: hidden; background: var(--surface-4); display: grid; place-items: center; position: relative; }
 .art-sm img, .tile-art img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; display: block; pointer-events: none; }
 .letter { width: 100%; height: 100%; display: grid; place-items: center; background: var(--pc); color: var(--on-pc); font-weight: 500; }
 .art-sm .letter { font-size: 16px; }
@@ -820,8 +820,9 @@ dialog.dlg::backdrop { background: var(--scrim); }
 
 <script type="module">
 // ---------------------------------------------------------------- constants
-const APP_VERSION = 19; // MUST equal the sw.js cache number (loungeremote-v19). Shown to the user as v2.3 (see label in PATCH_NOTES)
+const APP_VERSION = 20; // MUST equal the sw.js cache number (loungeremote-v20). Shown to the user as v2.3 (see label in PATCH_NOTES)
 const PATCH_NOTES = [
+  { v: 20, label: '2.3', date: '2026-11-09', title: 'Rounder favourites', items: ['Favourite app tiles on the main screen (and their thumbnails in All apps) have much rounder corners'] },
   { v: 19, label: '2.3', date: '2026-11-08', title: 'Remote button order', items: [
     'Remote: Mute (speaker with a cross) is middle right, Vol − is bottom left and Vol + is bottom right'
   ] },
