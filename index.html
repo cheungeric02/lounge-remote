@@ -790,7 +790,7 @@ dialog.dlg::backdrop { background: var(--scrim); }
   <div id="sheetInput" class="sheet-body" hidden>
     <div class="sleep-opts input-opts">
       <button type="button" class="sleep-opt press" data-port="1">HDMI 1</button>
-      <button type="button" class="sleep-opt press" data-port="2">HDMI 2</button>
+      <button type="button" class="sleep-opt press" data-port="2">Chromecast <small>HDMI 2</small></button>
       <button type="button" class="sleep-opt press" data-port="3">HDMI 3</button>
       <button type="button" class="sleep-opt press" data-port="4">HDMI 4</button>
     </div>
@@ -822,8 +822,9 @@ dialog.dlg::backdrop { background: var(--scrim); }
 
 <script type="module">
 // ---------------------------------------------------------------- constants
-const APP_VERSION = 22; // MUST equal the sw.js cache number (loungeremote-v22). Shown to the user as v2.3 (see label in PATCH_NOTES)
+const APP_VERSION = 23; // MUST equal the sw.js cache number (loungeremote-v23). Shown to the user as v2.3 (see label in PATCH_NOTES)
 const PATCH_NOTES = [
+  { v: 23, label: '2.3', date: '2026-11-09', title: 'HDMI 2 is Chromecast', items: ['In the Input picker, HDMI 2 is now labelled Chromecast'] },
   { v: 22, label: '2.3', date: '2026-11-09', title: 'Favourite tiles fill', items: ['Favourite tiles now fill their rounded box with the app art instead of showing black bars'] },
   { v: 21, label: '2.3', date: '2026-11-09', title: 'No stale Now Playing', items: ['Now Playing is hidden while the TV is offline, so a song the TV last played no longer shows up (e.g. when you are out of the house)'] },
   { v: 20, label: '2.3', date: '2026-11-09', title: 'Rounder favourites', items: ['Favourite app tiles on the main screen (and their thumbnails in All apps) have much rounder corners'] },
