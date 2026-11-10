@@ -421,6 +421,7 @@ body.has-nav main { padding-bottom: calc(104px + env(safe-area-inset-bottom)); m
 .art-sm { width: 64px; height: 36px; flex: none; border-radius: 16px; overflow: hidden; background: var(--surface-4); display: grid; place-items: center; position: relative; }
 
 .app-card .tile-art img { object-fit: cover; }
+.np-top { cursor: pointer; -webkit-tap-highlight-color: transparent; }
 .art-sm img, .tile-art img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; display: block; pointer-events: none; }
 .letter { width: 100%; height: 100%; display: grid; place-items: center; background: var(--pc); color: var(--on-pc); font-weight: 500; }
 .art-sm .letter { font-size: 16px; }
@@ -642,7 +643,7 @@ dialog.dlg::backdrop { background: var(--scrim); }
       <p id="npNote" class="note" hidden><span data-icon="music"></span><span>Turn on Now Playing access on the TV (Settings → Phone remote)</span></p>
       <section id="npCard" class="np" aria-label="Now playing" hidden>
         <div id="npSwipe" class="np-swipe">
-          <div class="np-top">
+          <div class="np-top" id="npOpen" role="button" tabindex="0" aria-label="Open this app on your phone">
             <div id="npArt" class="np-art"></div>
             <div class="np-meta">
               <div id="npApp" class="np-app"></div>
@@ -822,8 +823,9 @@ dialog.dlg::backdrop { background: var(--scrim); }
 
 <script type="module">
 // ---------------------------------------------------------------- constants
-const APP_VERSION = 23; // MUST equal the sw.js cache number (loungeremote-v23). Shown to the user as v2.3 (see label in PATCH_NOTES)
+const APP_VERSION = 24; // MUST equal the sw.js cache number (loungeremote-v24). Shown to the user as v2.3 (see label in PATCH_NOTES)
 const PATCH_NOTES = [
+  { v: 24, label: '2.3', date: '2026-11-10', title: 'Open the phone app', items: ['Tap the artwork or title on the Now Playing card to open that app (Spotify, YouTube, Netflix…) on your phone'] },
   { v: 23, label: '2.3', date: '2026-11-09', title: 'HDMI 2 is Chromecast', items: ['In the Input picker, HDMI 2 is now labelled Chromecast'] },
   { v: 22, label: '2.3', date: '2026-11-09', title: 'Favourite tiles fill', items: ['Favourite tiles now fill their rounded box with the app art instead of showing black bars'] },
   { v: 21, label: '2.3', date: '2026-11-09', title: 'No stale Now Playing', items: ['Now Playing is hidden while the TV is offline, so a song the TV last played no longer shows up (e.g. when you are out of the house)'] },
@@ -1703,6 +1705,23 @@ function renderProgress() {
   if (scrub) return; // the finger owns the bar while scrubbing
   paintProgress(npPosition(np));
 }
+// Tap the art / title → open the same app on this phone (Android intent; falls back to its Play Store page).
+const PHONE_PKG = {
+  'com.google.android.youtube.tv': 'com.google.android.youtube',
+  'com.google.android.youtube.tvmusic': 'com.google.android.apps.youtube.music',
+  'com.amazon.amazonvideo.livingroom': 'com.amazon.avod.thirdpartyclient',
+  'com.netflix.ninja': 'com.netflix.mediaclient',
+  'com.spotify.tv.android': 'com.spotify.music',
+};
+function openOnPhone() {
+  const tv = S.np.pkg; if (!tv) return;
+  const pkg = PHONE_PKG[tv] || tv;
+  const fb = encodeURIComponent('https://play.google.com/store/apps/details?id=' + pkg);
+  snack('Opening ' + (S.np.app || 'app') + ' on your phone');
+  location.href = `intent:#Intent;package=${pkg};S.browser_fallback_url=${fb};end`;
+}
+$('npOpen').addEventListener('click', openOnPhone);
+$('npOpen').addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openOnPhone(); } });
 $('npCard').addEventListener('click', (e) => {
   const b = e.target.closest('[data-media]'); if (!b) return;
   const a = b.dataset.media;
