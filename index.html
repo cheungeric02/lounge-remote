@@ -823,8 +823,9 @@ dialog.dlg::backdrop { background: var(--scrim); }
 
 <script type="module">
 // ---------------------------------------------------------------- constants
-const APP_VERSION = 24; // MUST equal the sw.js cache number (loungeremote-v24). Shown to the user as v2.3 (see label in PATCH_NOTES)
+const APP_VERSION = 25; // MUST equal the sw.js cache number (loungeremote-v25). Shown to the user as v2.3 (see label in PATCH_NOTES)
 const PATCH_NOTES = [
+  { v: 25, label: '2.3', date: '2026-11-10', title: 'Open the phone app, fixed', items: ['Tapping Now Playing now launches the app already installed on your phone instead of sending you to the Play Store'] },
   { v: 24, label: '2.3', date: '2026-11-10', title: 'Open the phone app', items: ['Tap the artwork or title on the Now Playing card to open that app (Spotify, YouTube, Netflix…) on your phone'] },
   { v: 23, label: '2.3', date: '2026-11-09', title: 'HDMI 2 is Chromecast', items: ['In the Input picker, HDMI 2 is now labelled Chromecast'] },
   { v: 22, label: '2.3', date: '2026-11-09', title: 'Favourite tiles fill', items: ['Favourite tiles now fill their rounded box with the app art instead of showing black bars'] },
@@ -1712,13 +1713,16 @@ const PHONE_PKG = {
   'com.amazon.amazonvideo.livingroom': 'com.amazon.avod.thirdpartyclient',
   'com.netflix.ninja': 'com.netflix.mediaclient',
   'com.spotify.tv.android': 'com.spotify.music',
+  'com.spotify.music.tv': 'com.spotify.music',
 };
 function openOnPhone() {
   const tv = S.np.pkg; if (!tv) return;
   const pkg = PHONE_PKG[tv] || tv;
   const fb = encodeURIComponent('https://play.google.com/store/apps/details?id=' + pkg);
   snack('Opening ' + (S.np.app || 'app') + ' on your phone');
-  location.href = `intent:#Intent;package=${pkg};S.browser_fallback_url=${fb};end`;
+  // A bare package intent matches no activity (→ fallback); ask for the app's launcher entry instead.
+  const scheme = pkg === 'com.spotify.music' ? 'scheme=spotify;' : '';
+  location.href = `intent://#Intent;${scheme}action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;package=${pkg};S.browser_fallback_url=${fb};end`;
 }
 $('npOpen').addEventListener('click', openOnPhone);
 $('npOpen').addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openOnPhone(); } });
