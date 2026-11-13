@@ -823,8 +823,9 @@ dialog.dlg::backdrop { background: var(--scrim); }
 
 <script type="module">
 // ---------------------------------------------------------------- constants
-const APP_VERSION = 25; // MUST equal the sw.js cache number (loungeremote-v25). Shown to the user as v2.3 (see label in PATCH_NOTES)
+const APP_VERSION = 26; // MUST equal the sw.js cache number (loungeremote-v26). Shown to the user as v2.3 (see label in PATCH_NOTES)
 const PATCH_NOTES = [
+  { v: 26, label: '2.3', date: '2026-11-13', title: 'Portrait only', items: ['The app stays in portrait and no longer rotates with your phone'] },
   { v: 25, label: '2.3', date: '2026-11-10', title: 'Open the phone app, fixed', items: ['Tapping Now Playing now launches the app already installed on your phone instead of sending you to the Play Store'] },
   { v: 24, label: '2.3', date: '2026-11-10', title: 'Open the phone app', items: ['Tap the artwork or title on the Now Playing card to open that app (Spotify, YouTube, Netflix…) on your phone'] },
   { v: 23, label: '2.3', date: '2026-11-09', title: 'HDMI 2 is Chromecast', items: ['In the Input picker, HDMI 2 is now labelled Chromecast'] },
@@ -2578,6 +2579,7 @@ checkWhatsNew(freshInstall);
 if (location.protocol === 'https:' && 'serviceWorker' in navigator && !DEMO) {
   navigator.serviceWorker.register('sw.js').catch((err) => console.warn('Lounge Remote: SW registration failed', err));
 }
+try { screen.orientation.lock('portrait').catch(() => {}); } catch (e) {} // portrait only (manifest does the real work in the installed app)
 </script>
 </body>
 </html>
